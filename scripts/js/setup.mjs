@@ -25,13 +25,18 @@
  * @license       Apache-2.0
  */
 //─────────────────────────────────────────────────────────────────────────────────────────────────┘
-import { $, argv }                    from "zx";
+import { $, argv, usePowerShell }     from "zx";
 import { buildOrgEnv }                from './build-org-env.mjs';
 import { buildScratchEnv }            from './build-scratch-env.mjs';
 import { SfdxFalconDebug }            from './sfdx-falcon/debug/index.mjs';
 import { SfdxFalconError }            from './sfdx-falcon/error/index.mjs';
 import  * as SfdxUtils                from './sfdx-falcon/utilities/sfdx.mjs';
 
+// ZX defaults to bash. On Windows, `bash` is often a WSL shim that fails with
+// "execvpe(/bin/bash) failed" when the distro is missing or misconfigured.
+if (process.platform === 'win32') {
+  usePowerShell();
+}
 // Set the File Local Debug Namespace
 const dbgNs = 'Setup';
 SfdxFalconDebug.msg(`${dbgNs}`, `Debugging initialized for ${dbgNs}`);
